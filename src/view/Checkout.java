@@ -1,8 +1,9 @@
+package view;
+
 import javax.swing.*;
 import java.awt.*;
 
-public class Checkout extends JFrame {
-
+public class Checkout extends JFrame{
     private JPanel mainPanel;
 
     public Checkout(){
