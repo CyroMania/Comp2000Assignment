@@ -81,6 +81,7 @@ public class Checkout extends AbstractView {
                     if ( controller.checkItemExists(new KeyValuePair(AbstractController.SCAN_CODE, ScanTf.getText())) == true ){
 
                         System.out.println("it exists.");
+
                         controller.addItemToList(new KeyValuePair(AbstractController.SCAN_CODE, ScanTf.getText()));
 
                         ScanTf.setText("");
@@ -123,7 +124,7 @@ public class Checkout extends AbstractView {
                     ShoppingTA.setText("");
                     String ItemList;
                     for (Item item: (ArrayList<Item>)data.value)
-                          {
+                    {
                         ItemList = ShoppingTA.getText();
                         ItemList += item.getItemName();
                         ShoppingTA.setText(ItemList);

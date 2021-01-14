@@ -31,7 +31,7 @@ public class Main {
         Item carrot = new Item("Carrot","Veg", "Re6122",5, 0.60f);
 
         //MainController.swapModel(1);
-        MainController.addItemToDatabase(tomato);
+        //MainController.addItemToDatabase(tomato);
         MainController.addItemToDatabase(carrot);
 
         MainController.printAllItems();

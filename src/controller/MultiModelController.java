@@ -32,7 +32,7 @@ public class MultiModelController extends AbstractController{
     @Override
     public void swapModel(int Index) {
 
-        if (Index > 0 && Index < models.length){
+        if (Index >= 0 && Index < models.length){
             if(currentModel != models[Index]){
                 currentModel.remove(this);
                 currentModel = models[Index];
@@ -105,7 +105,8 @@ public class MultiModelController extends AbstractController{
                     products.add(data);
                     System.out.println("Item Added to Database");
                 }
-                else{
+                else {
+
                 }
             }
         } catch (Exception e) {
@@ -166,8 +167,17 @@ public class MultiModelController extends AbstractController{
     @Override
     public ArrayList<Item> findItems(KeyValuePair data) {
         swapModel(1);
+        currentModel.getClass().getName();
+        ArrayList<Item> products = new ArrayList<Item>();
+        try {
+            for (Method method : modelMethods) {
 
-        ArrayList<Item> products = getItemArray();
+            }
+        }
+        catch {
+
+        }
+
         ArrayList<Item> results = new ArrayList<Item>();
         for (Item sample : products) {
             switch (data.key){
@@ -182,6 +192,7 @@ public class MultiModelController extends AbstractController{
                 case AbstractController.SCAN_CODE:
                     if (sample.getScanCode().equals(data.value)){
                         results.add(sample);
+                        System.out.println(sample.getItemName() + "exists");
                     }
             }
         }
