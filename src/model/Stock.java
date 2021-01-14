@@ -1,39 +1,39 @@
 package model;
 
+import controller.AbstractController;
+
 import java.util.*;
 
-public class Stock extends Model{
+public class Stock implements IModel{
 
-        private List<Item> products;
-        private Integer minQuantity;
-
+        private ArrayList<Item> products;
 
 
 
-        public Stock(Integer inMinQuantity) {
-                minQuantity = inMinQuantity;
+
+        public Stock() {
+                products = new ArrayList<Item>();
         }
 
 
-        public void AddItem(Item inItem) {
-                this.products.add(inItem);
+        public void AddItem(String itemName, String Description, String ScanCode, Integer Quantity, Float Price) {
+
+                Item product = new Item(itemName, Description, ScanCode, Quantity, Price);
+
+                products.add(product);
         }
 
-        public boolean CheckItemExists(String inScanCode) {
-                for (Item product : products) {
-                        if (product.getScanCode() == inScanCode) {
-                                return true;
-                        }
-                }
-                return false;
-        }
-
-        public List<Item> getProducts() {
+        public ArrayList<Item> getProducts() {
                 return products;
         }
 
-        public Integer getMinQuantity() {
-                return minQuantity;
+        @Override
+        public void add(AbstractController observer) {
+
         }
 
+        @Override
+        public void remove(AbstractController observer) {
+
+        }
 }

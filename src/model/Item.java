@@ -2,22 +2,22 @@ package model;
 
 public class Item {
 
-    private String name;
+    private String itemName;
     private String description;
     private String scanCode;
     private Integer quantity;
     private Float price;
 
-    public Item(String inName, String inDescription, String inScanCode, Float inPrice){
-        name = inName;
+    public Item(String inName, String inDescription, String inScanCode, Integer inQuantity, Float inPrice){
+        itemName = inName;
         description = inDescription;
         scanCode = inScanCode;
-        quantity = 10;
+        quantity = inQuantity;
         price = inPrice;
     }
 
-    public String getName() {
-        return name;
+    public String getItemName() {
+        return itemName;
     }
 
     public String getDescription() {
@@ -37,7 +37,7 @@ public class Item {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.itemName = name;
     }
 
     public void setDescription(String description) {

@@ -1,34 +1,46 @@
 package controller;
 
+import extras.KeyValuePair;
 import model.Stock;
 import model.Item;
+import view.Checkout;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class Controller implements IController{
+public class Controller extends AbstractController{
 
     private Stock stock;
-
+    private Checkout checkout;
 
     @Override
-    public boolean CheckScanCode(String inScanCode) {
-        boolean doesExist = this.stock.CheckItemExists(inScanCode);
-        return doesExist;
+    public void SetModelProperty(KeyValuePair data) {
+
     }
 
     @Override
-    public void AddItemToList(String inScanCode) {
-        List<Item> products = this.stock.getProducts();
-        for (Item product : products) {
-            if (product.getScanCode() == inScanCode) {
-                String item = product.getName() + " £" + product.getPrice();
-                UpdateCheckoutList(item);
-            }
-        }
+    public void addItemToList(KeyValuePair data) {
+
     }
 
     @Override
-    public void UpdateCheckoutList(String inData) {
+    public void addItemToDatabase(Item data) {
 
+    }
+
+    @Override
+    public boolean checkItemExists(KeyValuePair data) {
+        return false;
+    }
+
+
+    @Override
+    public void updateView(KeyValuePair data) {
+
+    }
+
+    @Override
+    public ArrayList<Item> findItems(KeyValuePair data) {
+        return null;
     }
 }
