@@ -22,6 +22,7 @@ public abstract class AbstractController {
     public abstract void addItemToDatabase(Item data);
     public abstract boolean checkItemExists(KeyValuePair data);
     public abstract void updateView(KeyValuePair data);
+    public abstract Item findItem(KeyValuePair data);
     public abstract ArrayList<Item> findItems(KeyValuePair data);
 
     public void printAllItems() {}

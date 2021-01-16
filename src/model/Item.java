@@ -8,6 +8,11 @@ public class Item {
     private Integer quantity;
     private Float price;
 
+
+    public Item() {
+
+    }
+
     public Item(String inName, String inDescription, String inScanCode, Integer inQuantity, Float inPrice){
         itemName = inName;
         description = inDescription;

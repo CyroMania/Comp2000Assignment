@@ -35,5 +35,6 @@ public class Main {
         MainController.addItemToDatabase(carrot);
 
         MainController.printAllItems();
+
     }
 }

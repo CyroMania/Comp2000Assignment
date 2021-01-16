@@ -64,7 +64,7 @@ public class Checkout extends AbstractView {
 
         setContentPane(mainPanel);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setPreferredSize(new Dimension(900, 900));
+        this.setPreferredSize(new Dimension(600, 600));
         this.pack();
 
         ShoppingTA.setText("");

@@ -40,6 +40,11 @@ public class Controller extends AbstractController{
     }
 
     @Override
+    public Item findItem(KeyValuePair data) {
+        return null;
+    }
+
+    @Override
     public ArrayList<Item> findItems(KeyValuePair data) {
         return null;
     }
