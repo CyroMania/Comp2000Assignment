@@ -120,16 +120,12 @@ public class Checkout extends AbstractView {
         if (selectedTab == 0) {
             switch (data.key) {
                 case AbstractController.LIST:
-                    System.out.println("made it here");
-                    ShoppingTA.setText("");
-                    String ItemList;
+                    String ItemList = ShoppingTA.getText();
                     for (Item item: (ArrayList<Item>)data.value)
                     {
-                        ItemList = ShoppingTA.getText();
                         ItemList += item.getItemName();
-                        ShoppingTA.setText(ItemList);
                     }
-
+                    ShoppingTA.setText(ItemList);
             }
         }
         else if (selectedTab == 1) {

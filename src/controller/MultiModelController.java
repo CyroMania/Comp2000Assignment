@@ -76,10 +76,8 @@ public class MultiModelController extends AbstractController{
                     products.add(result);
                     System.out.println(result.getItemName());
                     System.out.println("added");
-
+                    updateView(new KeyValuePair("List" , products));
             }
-
-            updateView(new KeyValuePair("List" , products));
         }
         catch (Exception e) {
             e.printStackTrace();
