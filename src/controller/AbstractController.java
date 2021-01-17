@@ -12,6 +12,7 @@ public abstract class AbstractController {
     public static final String SCAN_CODE = "ScanCode";
     public static final String QUANTITY = "Quantity";
     public static final String PRICE = "Price";
+
     public static final String LIST  = "List";
     public static final String ITEM  = "Item";
     //public static final String STOCK_DATABASE = "StockDatabase";

@@ -64,12 +64,15 @@ public class MultiModelController extends AbstractController{
     @Override
     public void addItemToList(KeyValuePair data) {
 
-        swapModel(1);
         ArrayList<Item> products = getItemArray();
-        swapModel(0);
+
 
         try{
             switch (data.key) {
+
+                case AbstractController.ITEM:
+                    products.add((Item)data.value);
+                    updateView(new KeyValuePair("List", products));
 
                 case AbstractController.SCAN_CODE:
                     Item result = findItem(new KeyValuePair(AbstractController.SCAN_CODE, data.value));

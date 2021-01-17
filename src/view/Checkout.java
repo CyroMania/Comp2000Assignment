@@ -9,8 +9,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,8 +27,8 @@ public class Checkout extends AbstractView {
     private JButton AddBtn;
     private JTextField QuantityTf;
     private JTabbedPane ServiceTPn;
-    private JList StockDatabaseLst;
     private JTextArea ShoppingTA;
+    private JTextArea StockDatabaseTA;
 
     private List<String> ScannedItems;
 
@@ -109,6 +108,71 @@ public class Checkout extends AbstractView {
             public void stateChanged(ChangeEvent e) {
                 int index = ServiceTPn.getSelectedIndex();
                 controller.swapModel(index);
+                System.out.println(index);
+            }
+        });
+
+
+        AddBtn.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+
+
+                try
+                {
+                    String itemName = ItemNameTf.getText();
+                    String scanCode = ScanCodeTf.getText();
+                    String Description = DescTf.getText();
+                    Integer Quantity = Integer.parseInt(QuantityTf.getText());
+                    Float Price = Float.parseFloat(PriceTf.getText());
+                    Item newProduct = new Item(itemName, scanCode, Description, Quantity, Price);
+                    controller.addItemToList(new KeyValuePair(AbstractController.ITEM, newProduct));
+                }
+                catch (Exception x)
+                {
+
+                }
+
+
+
+            }
+        });
+
+        ScanCodeTf.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                ScanCodeTf.setText("");
+            }
+        });
+        ItemNameTf.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                ItemNameTf.setText("");
+            }
+        });
+        DescTf.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                DescTf.setText("");
+            }
+        });
+        QuantityTf.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                QuantityTf.setText("");
+            }
+        });
+        PriceTf.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                PriceTf.setText("");
             }
         });
     }
@@ -131,7 +195,12 @@ public class Checkout extends AbstractView {
         else if (selectedTab == 1) {
             switch (data.key) {
                 case AbstractController.LIST:
-
+                    String ItemList = StockDatabaseTA.getText();
+                    for (Item item: (ArrayList<Item>)data.value)
+                    {
+                        ItemList += item.getItemName();
+                    }
+                    StockDatabaseTA.setText(ItemList);
             }
         }
     }
