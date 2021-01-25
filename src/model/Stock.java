@@ -7,7 +7,7 @@ import java.util.*;
 public class Stock implements IModel{
 
         private ArrayList<Item> products;
-
+        private Integer AlertQuantity = 5;
 
 
 
@@ -25,6 +25,14 @@ public class Stock implements IModel{
 
         public ArrayList<Item> getProducts() {
                 return products;
+        }
+
+        public Integer getAlertQuantity() {
+                return AlertQuantity;
+        }
+
+        public void setAlertQuantity(Integer alertQuantity) {
+                AlertQuantity = alertQuantity;
         }
 
         @Override

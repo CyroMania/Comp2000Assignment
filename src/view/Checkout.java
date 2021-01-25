@@ -29,6 +29,11 @@ public class Checkout extends AbstractView {
     private JTabbedPane ServiceTPn;
     private JTextArea ShoppingTA;
     private JTextArea StockDatabaseTA;
+    private JButton CashBtn;
+    private JButton CardBtn;
+    private JLabel PaymentLbl;
+    private JTextPane QuantityTA;
+    private JTextArea PriceTA;
 
     private List<String> ScannedItems;
 
@@ -185,14 +190,22 @@ public class Checkout extends AbstractView {
         if (selectedTab == 0) {
             switch (data.key) {
                 case AbstractController.LIST:
+
                     ShoppingTA.setText("");
+                    QuantityTA.setText("");
+
                     String ItemList = ShoppingTA.getText();
+                    String Quantities = QuantityTA.getText();
+
                     for (Item item: (ArrayList<Item>)data.value)
                     {
                         ItemList += item.getItemName();
                         ItemList += "\n";
+                        Quantities += item.getQuantity();
+                        Quantities += "\n";
                     }
                     ShoppingTA.setText(ItemList);
+                    QuantityTA.setText(Quantities);
             }
         }
         else if (selectedTab == 1) {

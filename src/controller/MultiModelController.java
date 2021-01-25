@@ -96,10 +96,71 @@ public class MultiModelController extends AbstractController{
                     break;
 
                 case AbstractController.SCAN_CODE:
-                    Item result = findItem(new KeyValuePair(AbstractController.SCAN_CODE, data.value));
-                    products.add(result);
-                    //System.out.println(result.getItemName());
-                    System.out.println("added to list");
+                    try
+                    {
+                        Item result = findItem(new KeyValuePair(AbstractController.SCAN_CODE, data.value));
+                        result.setQuantity(1);
+
+                        swapModel(1);
+                        ArrayList<Item> Database = getItemArray();
+                        swapModel(0);
+
+                        for (Item item: Database)
+                        {
+                            if (item.getScanCode().equals(result.getScanCode()))
+                            {
+
+                                if (item.getQuantity() > 0)
+                                {
+                                    if (!products.contains(result))
+                                    {
+                                        products.add(result);
+                                    }
+                                    else
+                                    {
+                                        for (Item scannedItem: products) {
+                                            if (scannedItem.getScanCode().equals(result.getScanCode()))
+                                            {
+                                                scannedItem.setQuantity(scannedItem.getQuantity() + 1);
+                                            }
+                                        }
+                                    }
+
+                                    System.out.println("added to list");
+                                    item.setQuantity(item.getQuantity() - 1);
+                                    System.out.println(item.getQuantity() + " left in stock, the item is called " + item.getItemName());
+                                    Integer AlertQuantity = (Integer)currentModel.getClass().getDeclaredMethod("getAlertQuantity").invoke(currentModel, null);
+                                    System.out.println(AlertQuantity);
+                                    if (item.getQuantity() <= AlertQuantity)
+                                    {
+                                        swapModel(2);
+                                        System.out.println("Item is below alert quantity");
+                                        ArrayList<Item> AlertStock = getItemArray();
+                                        for (Item alertItem: AlertStock) {
+                                            System.out.println(alertItem.getItemName());
+                                        }
+                                        if (!AlertStock.contains(item))
+                                        {
+                                            AlertStock.add(item);
+                                            System.out.println("Item was added to alert stock");
+                                        }
+                                        swapModel(0);
+                                     }
+                                }
+                                else
+                                {
+                                    System.out.println("Item is out of stock");
+                                }
+                            }
+                        }
+
+
+                    }
+                    catch (Exception x)
+                    {
+                        System.out.println("Item with ScanCode could not be found");
+                    }
+
                     updateView(new KeyValuePair("List" , products));
                     break;
             }

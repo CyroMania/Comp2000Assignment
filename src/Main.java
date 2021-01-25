@@ -12,12 +12,15 @@ import java.security.Key;
 public class Main {
 
     public static void main(String[] args){
-        IModel[] models = new IModel[2];
+        IModel[] models = new IModel[3];
+
         IModel StockDatabase = new Stock();
         IModel Basket = new Stock();
+        IModel LowQuantityStock = new Stock();
 
         models[0] = Basket;
         models[1] = StockDatabase;
+        models[2] = LowQuantityStock;
 
 
         AbstractView checkoutPage = new Checkout();
