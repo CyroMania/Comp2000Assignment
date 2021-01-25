@@ -15,6 +15,7 @@ public abstract class AbstractController {
 
     public static final String LIST  = "List";
     public static final String ITEM  = "Item";
+    public static final String STOCK = "Stock";
     //public static final String STOCK_DATABASE = "StockDatabase";
     //public static final String BASKET = "Shopping";
 

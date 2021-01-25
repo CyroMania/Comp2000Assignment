@@ -8,6 +8,7 @@ import view.AbstractView;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.io.*;
 import java.util.ArrayList;
 
 public class MultiModelController extends AbstractController{
@@ -54,9 +55,11 @@ public class MultiModelController extends AbstractController{
                     method.invoke(currentModel,data.value);
                 }
             }
-        } catch (IllegalAccessException e) {
+        } catch (IllegalAccessException e)
+        {
             e.printStackTrace();
-        } catch (InvocationTargetException e) {
+        } catch (InvocationTargetException e)
+        {
             e.printStackTrace();
         }
     }
@@ -73,13 +76,32 @@ public class MultiModelController extends AbstractController{
                 case AbstractController.ITEM:
                     products.add((Item)data.value);
                     updateView(new KeyValuePair("List", products));
+                    break;
+
+                case AbstractController.STOCK:
+                    System.out.println("wow!");
+                    Item currentItem = (Item)data.value;
+                    String scanCode = currentItem.getScanCode();
+
+                    for ( Item item : products)
+                    {
+                        if (item.getScanCode().equals(scanCode)){
+                            System.out.println("Item Already Exists with this ScanCode. Please Change The Identifier");
+                            return;
+                        }
+                    }
+
+                    products.add(currentItem);
+                    updateView(new KeyValuePair("List", products));
+                    break;
 
                 case AbstractController.SCAN_CODE:
                     Item result = findItem(new KeyValuePair(AbstractController.SCAN_CODE, data.value));
                     products.add(result);
-                    System.out.println(result.getItemName());
-                    System.out.println("added");
+                    //System.out.println(result.getItemName());
+                    System.out.println("added to list");
                     updateView(new KeyValuePair("List" , products));
+                    break;
             }
         }
         catch (Exception e) {
@@ -95,11 +117,13 @@ public class MultiModelController extends AbstractController{
             for (Method method : modelMethods) {
                 if (method.getName() == "getProducts") {
                     ArrayList<Item> products = (ArrayList<Item>)method.invoke(currentModel, null);
-                    products.add(data);
-                    System.out.println("Item Added to Database");
-                }
-                else {
-
+                    if (products.contains(data)){
+                        System.out.println("Item already exists in database");
+                    }
+                    else{
+                        products.add(data);
+                        System.out.println("Item Added to Database");
+                    }
                 }
             }
         } catch (Exception e) {
@@ -107,6 +131,10 @@ public class MultiModelController extends AbstractController{
         }
 
         swapModel(0);
+    }
+
+    public void WriteToDatabaseFile(KeyValuePair data){
+
     }
 
 
@@ -121,11 +149,11 @@ public class MultiModelController extends AbstractController{
                     products = (ArrayList<Item>)method.invoke(currentModel, null);
                     for (Item product : products) {
                         if( product.getScanCode().equals(data.value) ) {
+                            swapModel(0);
                             return true;
                         }
                         else{
                             System.out.println("Did not Match Item: " + product.getScanCode());
-                            System.out.println(data.value);
                         }
                     }
                 }
@@ -140,14 +168,14 @@ public class MultiModelController extends AbstractController{
     }
 
     public void printAllItems(){
-        swapModel(1);
+
         ArrayList<Item> products;
 
         products = getItemArray();
-        for (Item product: products) {
-            System.out.println(product.getItemName());
+        for(Item item : products){
+            System.out.println( item.getScanCode() + " " + item.getItemName());
         }
-        swapModel(0);
+
     }
 
 
@@ -161,7 +189,6 @@ public class MultiModelController extends AbstractController{
         swapModel(1);
 
         ArrayList<Item> products = getItemArray();
-        System.out.println("we're finding this item");
         Item result = new Item();
 
         for (Item sample : products) {
@@ -177,7 +204,6 @@ public class MultiModelController extends AbstractController{
                 case AbstractController.SCAN_CODE:
                     if (sample.getScanCode().equals(data.value)){
                         result = sample;
-                        System.out.println("Found item");
                     }
             }
         }
@@ -218,13 +244,14 @@ public class MultiModelController extends AbstractController{
             for (Method method : modelMethods) {
                 if (method.getName() == "getProducts"){
                     products = (ArrayList<Item>)method.invoke(currentModel, null);
-
                 }
             }
+
         }
         catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
+
         return products;
     }
 

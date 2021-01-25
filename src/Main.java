@@ -33,8 +33,8 @@ public class Main {
         //MainController.swapModel(1);
         MainController.addItemToDatabase(tomato);
         MainController.addItemToDatabase(carrot);
-
-        MainController.printAllItems();
+        //MainController.addItemToDatabase(carrot);
+        //MainController.printAllItems();
 
     }
 }

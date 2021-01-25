@@ -96,7 +96,7 @@
                       </grid>
                     </constraints>
                     <properties>
-                      <text value="#Name"/>
+                      <text value="#ItemName"/>
                     </properties>
                   </component>
                   <component id="97700" class="javax.swing.JTextField" binding="DescTf">

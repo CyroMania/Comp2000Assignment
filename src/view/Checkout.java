@@ -71,7 +71,17 @@ public class Checkout extends AbstractView {
 
         //Initialise(3,5);
 
+        ServiceTPn.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                int index = ServiceTPn.getSelectedIndex();
+                controller.swapModel(index);
+                System.out.println(index);
 
+
+                controller.printAllItems();
+            }
+        });
 
         ScanBtn.addActionListener(new ActionListener() {
             @Override
@@ -95,23 +105,6 @@ public class Checkout extends AbstractView {
         });
 
 
-        AddBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
-
-
-        ServiceTPn.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                int index = ServiceTPn.getSelectedIndex();
-                controller.swapModel(index);
-                System.out.println(index);
-            }
-        });
-
 
         AddBtn.addActionListener(new ActionListener()
         {
@@ -127,15 +120,13 @@ public class Checkout extends AbstractView {
                     String Description = DescTf.getText();
                     Integer Quantity = Integer.parseInt(QuantityTf.getText());
                     Float Price = Float.parseFloat(PriceTf.getText());
-                    Item newProduct = new Item(itemName, scanCode, Description, Quantity, Price);
-                    controller.addItemToList(new KeyValuePair(AbstractController.ITEM, newProduct));
+                    Item newProduct = new Item(itemName, Description, scanCode, Quantity, Price);
+                    controller.addItemToList(new KeyValuePair(AbstractController.STOCK, newProduct));
                 }
                 catch (Exception x)
                 {
-
+                    System.out.println("ITEM FAILED TO ADD");
                 }
-
-
 
             }
         });
@@ -144,35 +135,45 @@ public class Checkout extends AbstractView {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                ScanCodeTf.setText("");
+                if (ScanCodeTf.getText().equals("#" + AbstractController.SCAN_CODE)){
+                    ScanCodeTf.setText("");
+                }
             }
         });
         ItemNameTf.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                ItemNameTf.setText("");
+                if (ItemNameTf.getText().equals("#" + AbstractController.ITEM_NAME)){
+                    ItemNameTf.setText("");
+                }
             }
         });
         DescTf.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                DescTf.setText("");
+                if (DescTf.getText().equals("#" + AbstractController.DESCRIPTION)){
+                    DescTf.setText("");
+                }
             }
         });
         QuantityTf.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                QuantityTf.setText("");
+                if (QuantityTf.getText().equals("#" + AbstractController.QUANTITY)){
+                    QuantityTf.setText("");
+                }
             }
         });
         PriceTf.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                PriceTf.setText("");
+                if (PriceTf.getText().equals("#" + AbstractController.PRICE)){
+                    PriceTf.setText("");
+                }
             }
         });
     }
@@ -184,10 +185,12 @@ public class Checkout extends AbstractView {
         if (selectedTab == 0) {
             switch (data.key) {
                 case AbstractController.LIST:
+                    ShoppingTA.setText("");
                     String ItemList = ShoppingTA.getText();
                     for (Item item: (ArrayList<Item>)data.value)
                     {
                         ItemList += item.getItemName();
+                        ItemList += "\n";
                     }
                     ShoppingTA.setText(ItemList);
             }
@@ -195,10 +198,12 @@ public class Checkout extends AbstractView {
         else if (selectedTab == 1) {
             switch (data.key) {
                 case AbstractController.LIST:
+                    StockDatabaseTA.setText("");
                     String ItemList = StockDatabaseTA.getText();
                     for (Item item: (ArrayList<Item>)data.value)
                     {
                         ItemList += item.getItemName();
+                        ItemList += "\n";
                     }
                     StockDatabaseTA.setText(ItemList);
             }
