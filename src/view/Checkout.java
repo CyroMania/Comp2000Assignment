@@ -34,6 +34,8 @@ public class Checkout extends AbstractView {
     private JLabel PaymentLbl;
     private JTextPane QuantityTA;
     private JTextArea PriceTA;
+    private JButton UpdateBtn;
+    private JButton DeleteBtn;
 
     private List<String> ScannedItems;
 
@@ -68,7 +70,7 @@ public class Checkout extends AbstractView {
 
         setContentPane(mainPanel);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setPreferredSize(new Dimension(600, 600));
+        this.setPreferredSize(new Dimension(800, 800));
         this.pack();
 
         ShoppingTA.setText("");
