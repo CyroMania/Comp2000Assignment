@@ -79,7 +79,6 @@ public class MultiModelController extends AbstractController{
                     break;
 
                 case AbstractController.STOCK:
-                    System.out.println("wow!");
                     Item currentItem = (Item)data.value;
                     String scanCode = currentItem.getScanCode();
 
@@ -119,6 +118,7 @@ public class MultiModelController extends AbstractController{
                                 {
                                     item.setQuantity(item.getQuantity() - 1);
                                     Item newItem = new Item(item.getItemName(), item.getDescription(),item.getScanCode() ,1, item.getPrice());
+
                                     Boolean Exists = false;
                                     for (Item scannedItem: products)
                                     {
@@ -139,6 +139,7 @@ public class MultiModelController extends AbstractController{
                                             if (scannedItem.getScanCode().equals(newItem.getScanCode()))
                                             {
                                                 scannedItem.setQuantity(scannedItem.getQuantity() + 1);
+                                                scannedItem.setPrice(scannedItem.getPrice() + item.getPrice());
                                             }
                                         }
                                     }

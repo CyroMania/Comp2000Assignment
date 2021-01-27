@@ -10,6 +10,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -195,9 +197,11 @@ public class Checkout extends AbstractView {
 
                     ShoppingTA.setText("");
                     QuantityTA.setText("");
+                    PriceTA.setText("");
 
                     String ItemList = ShoppingTA.getText();
                     String Quantities = QuantityTA.getText();
+                    String PriceList = PriceTA.getText();
 
                     for (Item item: (ArrayList<Item>)data.value)
                     {
@@ -205,9 +209,14 @@ public class Checkout extends AbstractView {
                         ItemList += "\n";
                         Quantities += item.getQuantity();
                         Quantities += "\n";
+                        DecimalFormat Df = new DecimalFormat("£#.00");
+                        PriceList += Df.format(item.getPrice());
+                        PriceList += "\n";
                     }
                     ShoppingTA.setText(ItemList);
                     QuantityTA.setText(Quantities);
+                    PriceTA.setText(PriceList);
+
             }
         }
         else if (selectedTab == 1) {
