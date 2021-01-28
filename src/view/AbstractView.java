@@ -1,27 +1,26 @@
 package view;
 
 import controller.AbstractController;
-import controller.Controller;
 import extras.KeyValuePair;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.FileNotFoundException;
 
 public abstract class AbstractView extends JFrame{
 
-    private int defWindowSize = 900;
+    private int defWindowSize = 500;
     protected AbstractController controller;
 
-    protected void Initialise(int rows, int cols){
-        this.setLayout(new GridLayout(rows, cols));
+    protected void Initialise(JPanel mainPanel){
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setPreferredSize(new Dimension(defWindowSize, defWindowSize));
+        this.setContentPane(mainPanel);
         this.pack();
 
-        this.setVisible(true);
     }
 
-    public abstract void Update(KeyValuePair data);
+    public abstract void Update(KeyValuePair data) throws FileNotFoundException;
 
     public void SetController(AbstractController inController){
         this.controller = inController;

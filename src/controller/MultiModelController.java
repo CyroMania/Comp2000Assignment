@@ -5,12 +5,14 @@ import model.IModel;
 import model.Item;
 import view.AbstractView;
 
+import javax.swing.*;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Scanner;
 
 public class MultiModelController extends AbstractController{
 
@@ -48,6 +50,43 @@ public class MultiModelController extends AbstractController{
     }
 
     @Override
+    public void Login(String inUsername, char[] inPassword) throws FileNotFoundException {
+        String username = inUsername;
+        String password = "";
+        for (char c: inPassword)
+        {
+            password += c;
+        }
+
+        Scanner admins = new Scanner(new File("admins.txt"));
+
+        while (admins.hasNextLine())
+        {
+            if (admins.nextLine().equals(username + " " + password))
+            {
+                System.out.println("Logged in successfully");
+                swapModel(2);
+                ArrayList<Item> AlertStock = getItemArray();
+                swapModel(1);
+
+                String ItemList = "";
+                for (Item item: AlertStock)
+                {
+                    ItemList += item.getItemName() + " " + item.getScanCode() + "\n";
+                }
+
+                JOptionPane.showMessageDialog(currentView, "The Following Items Need Replenishment:\n" + ItemList);
+
+                updateView(new KeyValuePair(AbstractController.LOGIN, true));
+                return;
+            }
+        }
+
+        updateView(new KeyValuePair(AbstractController.LOGIN, false));
+
+    }
+
+    @Override
     public void SetModelProperty(KeyValuePair data) {
         try {
             String methodName = "set" + data.key;
@@ -66,8 +105,10 @@ public class MultiModelController extends AbstractController{
     }
 
     @Override
-    public void loadList() {
+    public void loadList() throws IOException {
         ArrayList<Item> Items = getItemArray();
+
+        writeToFile("products.txt", Items);
 
         updateView(new KeyValuePair(AbstractController.LIST, Items));
     }
@@ -99,6 +140,11 @@ public class MultiModelController extends AbstractController{
                     }
 
                     products.add(currentItem);
+
+
+                    writeToFile("products.txt",products);
+
+
                     updateView(new KeyValuePair("List", products));
                     break;
 
@@ -239,6 +285,8 @@ public class MultiModelController extends AbstractController{
                 }
             }
 
+            writeToFile("products.txt",Products);
+
             updateView(new KeyValuePair(AbstractController.LIST, Products));
 
         } catch (Exception e) {
@@ -247,44 +295,70 @@ public class MultiModelController extends AbstractController{
     }
 
     @Override
-    public void removeItemFromList(KeyValuePair data) {
+    public void writeToFile(String fileName, ArrayList<Item> model) throws IOException {
 
-        ArrayList<Item> Products = getItemArray();
+        FileWriter file = new FileWriter(new File(fileName));
+        for (int i = 0; i < model.size(); i++) {
+            if (i < model.size() - 1)
+            {
+                file.write(model.get(i).getItemName() + " " +
+                        model.get(i).getDescription() + " " +
+                        model.get(i).getScanCode() + " " +
+                        model.get(i).getQuantity() + " " +
+                        model.get(i).getPrice() + "\n");
+            }
+            else
+            {
+                file.write(model.get(i).getItemName() + " " +
+                        model.get(i).getDescription() + " " +
+                        model.get(i).getScanCode() + " " +
+                        model.get(i).getQuantity() + " " +
+                        model.get(i).getPrice());
+            }
+        }
+
+        file.close();
+    }
+
+    @Override
+    public void removeItemFromList(KeyValuePair data) throws FileNotFoundException {
+
+        ArrayList<Item> products = getItemArray();
         Item itemToRemove = (Item)data.value;
         try
         {
-            /*Iterator<Item> iterator = Products.iterator();
-            while (iterator.hasNext())
-            {
-                Item currentItem = iterator.next();
-                System.out.println(currentItem);
+            products.remove(itemToRemove);
 
-                if (currentItem.equals(itemToRemove))
+            FileWriter ProductFile = new FileWriter(new File("products.txt"));
+            for (int i = 0; i < products.size(); i++) {
+                if (i < products.size() - 1)
                 {
-                    Products.remove(currentItem);
+                    ProductFile.write(products.get(i).getItemName() + " " +
+                            products.get(i).getDescription() + " " +
+                            products.get(i).getScanCode() + " " +
+                            products.get(i).getQuantity() + " " +
+                            products.get(i).getPrice() + "\n");
+                }
+                else
+                {
+                    ProductFile.write(products.get(i).getItemName() + " " +
+                            products.get(i).getDescription() + " " +
+                            products.get(i).getScanCode() + " " +
+                            products.get(i).getQuantity() + " " +
+                            products.get(i).getPrice());
                 }
             }
-            System.out.println("woooohooo");
-            for (Item item: Products)
-            {
-                System.out.println(item.getItemName());
-            }*/
-            Products.remove(itemToRemove);
+
+            ProductFile.close();
+
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
-        updateView(new KeyValuePair(AbstractController.LIST, Products));
+        updateView(new KeyValuePair(AbstractController.LIST, products));
 
     }
-
-    public void WriteToDatabaseFile(KeyValuePair data){
-
-    }
-
-
-
 
 
     @Override
@@ -329,7 +403,7 @@ public class MultiModelController extends AbstractController{
 
 
     @Override
-    public void updateView(KeyValuePair data) {
+    public void updateView(KeyValuePair data) throws FileNotFoundException {
         currentView.Update(data);
     }
 
@@ -384,7 +458,6 @@ public class MultiModelController extends AbstractController{
         }
         return results;
     }
-
 
     public ArrayList<Item> getItemArray(){
         ArrayList<Item> products = new ArrayList<Item>();

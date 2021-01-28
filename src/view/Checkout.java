@@ -11,8 +11,12 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Checkout extends AbstractView {
 
@@ -38,53 +42,27 @@ public class Checkout extends AbstractView {
     private JButton UpdateBtn;
     private JButton DeleteBtn;
     private JList StockDatabaseLt;
+    private JTextField UsernameTf;
+    private JPasswordField PasswordTf;
+    private JButton LoginBtn;
 
     private DefaultListModel<Item> StockDatabase;
 
     public Checkout(){
 
-      //  mainPanel = new JPanel();
 
-      //  ShoppingLst = new JList();
-      //  ScanTf = new JTextField();
-      //  ScanBtn = new JButton();
-      //  addStockPanel = new JPanel();
-      //  ScanCodeTf = new JTextField();
-      //  ItemNameTf = new JTextField();
-      //  DescTf = new JTextField();
-      //  QuantityTf = new JTextField();
-      //  PriceTf = new JTextField();
-      //  AddBtn = new JButton();
-
-
-
-        //mainPanel.add(ShoppingLst);
-        //mainPanel.add(ScanTf);
-        //mainPanel.add(ScanBtn);
-        //mainPanel.add(addStockPanel);
-        //mainPanel.add(ScanCodeTf);
-        //mainPanel.add(ItemNameTf);
-        //mainPanel.add(DescTf);
-        //mainPanel.add(QuantityTf);
-        //mainPanel.add(PriceTf);
-        //mainPanel.add(AddBtn);
-
-
-        this.setContentPane(mainPanel);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setPreferredSize(new Dimension(800, 800));
-        this.pack();
+        Initialise(mainPanel);
 
         StockDatabase = new DefaultListModel<>();
         StockDatabaseLt.setModel(StockDatabase);
         StockDatabaseLt.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         StockDatabaseLt.setVisibleRowCount(5);
 
+        PasswordTf.setEchoChar((char) 0);
         ShoppingTA.setText("");
 
         this.setVisible(true);
 
-        //Initialise(3,5);
 
         ServiceTPn.addChangeListener(new ChangeListener() {
             @Override
@@ -94,7 +72,11 @@ public class Checkout extends AbstractView {
                 System.out.println(index);
 
 
-                controller.loadList();
+                try {
+                    controller.loadList();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
 
 
                 if (index != 1)
@@ -160,7 +142,11 @@ public class Checkout extends AbstractView {
             public void actionPerformed(ActionEvent e)
             {
                 Item itemToDelete = StockDatabase.elementAt(StockDatabaseLt.getSelectedIndex());
-                controller.removeItemFromList(new KeyValuePair(AbstractController.ITEM, itemToDelete));
+                try {
+                    controller.removeItemFromList(new KeyValuePair(AbstractController.ITEM, itemToDelete));
+                } catch (FileNotFoundException fileNotFoundException) {
+                    fileNotFoundException.printStackTrace();
+                }
             }
         });
 
@@ -183,6 +169,14 @@ public class Checkout extends AbstractView {
                         QuantityTf.setText(String.valueOf(StockDatabase.get(selectedIndex).getQuantity()));
                         DecimalFormat Df = new DecimalFormat("£#0.00");
                         PriceTf.setText(Df.format(StockDatabase.get(selectedIndex).getPrice()));
+                    }
+                    else
+                    {
+                        ItemNameTf.setText("#" + AbstractController.ITEM_NAME);
+                        DescTf.setText("#" + AbstractController.DESCRIPTION);
+                        ScanCodeTf.setText("#" + AbstractController.SCAN_CODE);
+                        QuantityTf.setText("#" + AbstractController.QUANTITY);
+                        PriceTf.setText("#" + AbstractController.PRICE);
                     }
                 }
                 catch (IndexOutOfBoundsException v)
@@ -270,14 +264,67 @@ public class Checkout extends AbstractView {
                 }
             }
         });
+
+
+        LoginBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String username = UsernameTf.getText();
+                char[] password = PasswordTf.getPassword();
+
+                try {
+                    controller.Login(username, password);
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+            }
+        });
+        UsernameTf.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+
+                if (UsernameTf.getText().equals("#Username"))
+                {
+                    UsernameTf.setText("");
+                }
+            }
+        });
+        PasswordTf.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                String password = "#Password";
+                Boolean isDefault = true;
+
+                for (int i = 0; i < password.length(); i++) {
+                    if (PasswordTf.getPassword()[i] != password.charAt(i))
+                    {
+                        isDefault = false;
+                        break;
+                    }
+                }
+
+                if (isDefault)
+                {
+                    PasswordTf.setText("");
+                }
+
+
+                PasswordTf.setEchoChar('*');
+            }
+        });
     }
 
     @Override
-    public void Update(KeyValuePair data) {
+    public void Update(KeyValuePair data) throws FileNotFoundException {
         Integer selectedTab = ServiceTPn.getSelectedIndex();
-        ArrayList<Item> Products = (ArrayList<Item>)data.value;
+
 
         if (selectedTab == 0) {
+            ArrayList<Item> Basket = (ArrayList<Item>)data.value;
+
+
             switch (data.key) {
                 case AbstractController.LIST:
 
@@ -289,7 +336,7 @@ public class Checkout extends AbstractView {
                     String Quantities = QuantityTA.getText();
                     String PriceList = PriceTA.getText();
 
-                    for (Item item: Products)
+                    for (Item item: Basket)
                     {
                         ItemList += item.getItemName() + "\n";
                         Quantities += item.getQuantity() + "\n";
@@ -305,22 +352,63 @@ public class Checkout extends AbstractView {
             }
         }
         else if (selectedTab == 1) {
+
             switch (data.key) {
                 case AbstractController.LIST:
+                    ArrayList<Item> Products = (ArrayList<Item>)data.value;
                     System.out.println("We're updating");
 
                     StockDatabaseTA.setText("");
                     StockDatabase.clear();
 
-                    String ItemList = StockDatabaseTA.getText();
+                    Scanner ProductFile = new Scanner(new File("products.txt"));
+
+                    while(ProductFile.hasNextLine())
+                    {
+                        StockDatabaseTA.append(ProductFile.next() + "\n");
+                        ProductFile.nextLine();
+                    }
+
+                    ProductFile.close();
+
 
                     for (int i = 0; i < Products.size(); i++) {
-                        ItemList += Products.get(i).getItemName() + "\n";
                         StockDatabase.addElement(Products.get(i));
                     }
 
-                    StockDatabaseTA.setText(ItemList);
                     break;
+
+                case AbstractController.LOGIN:
+
+                    if ((Boolean)data.value == true)
+                    {
+                        JOptionPane.showMessageDialog(mainPanel, "Login Successful!");
+
+
+                        UsernameTf.setEnabled(false);
+                        PasswordTf.setEnabled(false);
+                        LoginBtn.setEnabled(false);
+
+                        StockDatabaseTA.setEnabled(true);
+                        StockDatabaseLt.setEnabled(true);
+
+                        addStockPanel.setEnabled(true);
+                        AddBtn.setEnabled(true);
+                        ItemNameTf.setEnabled(true);
+                        DescTf.setEnabled(true);
+                        ScanCodeTf.setEnabled(true);
+                        QuantityTf.setEnabled(true);
+                        PriceTf.setEnabled(true);
+
+                    }
+                    else
+                    {
+                        JOptionPane.showMessageDialog(mainPanel,"No Username or Password Matched, Try Again");
+                    }
+
+
+                    break;
+
 
                 case AbstractController.ITEM:
 
