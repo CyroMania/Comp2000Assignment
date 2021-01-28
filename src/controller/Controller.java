@@ -19,12 +19,27 @@ public class Controller extends AbstractController{
     }
 
     @Override
+    public void loadList() {
+
+    }
+
+    @Override
     public void addItemToList(KeyValuePair data) {
 
     }
 
     @Override
     public void addItemToDatabase(Item data) {
+
+    }
+
+    @Override
+    public void updateItemInList(KeyValuePair data) {
+
+    }
+
+    @Override
+    public void removeItemFromList(KeyValuePair data) {
 
     }
 

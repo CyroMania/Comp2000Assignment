@@ -10,6 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class MultiModelController extends AbstractController{
 
@@ -65,6 +66,13 @@ public class MultiModelController extends AbstractController{
     }
 
     @Override
+    public void loadList() {
+        ArrayList<Item> Items = getItemArray();
+
+        updateView(new KeyValuePair(AbstractController.LIST, Items));
+    }
+
+    @Override
     public void addItemToList(KeyValuePair data) {
 
         ArrayList<Item> products = getItemArray();
@@ -108,6 +116,7 @@ public class MultiModelController extends AbstractController{
 
                         swapModel(1);
                         ArrayList<Item> Database = getItemArray();
+                        swapModel(0);
 
                         for (Item item: Database)
                         {
@@ -143,30 +152,6 @@ public class MultiModelController extends AbstractController{
                                             }
                                         }
                                     }
-
-
-                                    /*if (!products.contains(newItem))
-                                    {
-                                        swapModel(0);
-
-
-                                        products.add(newItem);
-
-                                        System.out.println("added to basket");
-
-
-                                    }
-                                    else
-                                    {
-                                        for (Item scannedItem: products) {
-                                            if (scannedItem.getScanCode().equals(result.getScanCode()))
-                                            {
-                                                scannedItem.setQuantity(scannedItem.getQuantity() + 1);
-                                            }
-                                        }
-                                    }*/
-
-
 
                                     System.out.println(item.getQuantity() + " left in stock, the item is called " + item.getItemName());
 
@@ -233,9 +218,73 @@ public class MultiModelController extends AbstractController{
         swapModel(0);
     }
 
+    @Override
+    public void updateItemInList(KeyValuePair data) {
+
+        ArrayList<Item> Products = getItemArray();
+        Item itemToUpdate = (Item)data.value;
+        try
+        {
+            for (int i = 0; i < Products.size(); i++) {
+                if (Products.get(i).getScanCode().equals(itemToUpdate.getScanCode()))
+                {
+                    Products.set(i, itemToUpdate);
+                }
+                else if (Products.get(i).getItemName().equals(itemToUpdate.getItemName()) &&
+                         Products.get(i).getDescription().equals(itemToUpdate.getDescription()) &&
+                        Products.get(i).getQuantity().equals(itemToUpdate.getQuantity()) &&
+                        Products.get(i).getPrice().equals(itemToUpdate.getPrice()))
+                {
+                    Products.set(i, itemToUpdate);
+                }
+            }
+
+            updateView(new KeyValuePair(AbstractController.LIST, Products));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void removeItemFromList(KeyValuePair data) {
+
+        ArrayList<Item> Products = getItemArray();
+        Item itemToRemove = (Item)data.value;
+        try
+        {
+            /*Iterator<Item> iterator = Products.iterator();
+            while (iterator.hasNext())
+            {
+                Item currentItem = iterator.next();
+                System.out.println(currentItem);
+
+                if (currentItem.equals(itemToRemove))
+                {
+                    Products.remove(currentItem);
+                }
+            }
+            System.out.println("woooohooo");
+            for (Item item: Products)
+            {
+                System.out.println(item.getItemName());
+            }*/
+            Products.remove(itemToRemove);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        updateView(new KeyValuePair(AbstractController.LIST, Products));
+
+    }
+
     public void WriteToDatabaseFile(KeyValuePair data){
 
     }
+
+
+
 
 
     @Override

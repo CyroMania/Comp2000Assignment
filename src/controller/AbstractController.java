@@ -4,6 +4,7 @@ import extras.KeyValuePair;
 import model.Item;
 
 import javax.swing.*;
+import java.security.Key;
 import java.util.ArrayList;
 
 public abstract class AbstractController {
@@ -20,8 +21,11 @@ public abstract class AbstractController {
     //public static final String BASKET = "Shopping";
 
     public abstract void SetModelProperty(KeyValuePair data);
+    public abstract void loadList();
     public abstract void addItemToList(KeyValuePair data);
     public abstract void addItemToDatabase(Item data);
+    public abstract void updateItemInList(KeyValuePair data);
+    public abstract void removeItemFromList(KeyValuePair data);
     public abstract boolean checkItemExists(KeyValuePair data);
     public abstract void updateView(KeyValuePair data);
     public abstract Item findItem(KeyValuePair data);
@@ -30,6 +34,7 @@ public abstract class AbstractController {
     public void printAllItems() {}
 
     public void swapModel(int Index){};
+
 
 
 
